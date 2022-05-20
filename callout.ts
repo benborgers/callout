@@ -97,9 +97,33 @@ export class NotionDocument {
       return `<h3>${await this.#richTextToHtml(
         block.heading_3.rich_text
       )}</h3>`;
+    } else if (block.type === "image") {
+      const src =
+        block.image.type === "file"
+          ? block.image.file.url
+          : block.image.type === "external"
+          ? block.image.external.url
+          : "";
+
+      return `<figure>
+          <img src="${src}" />${
+        block.image.caption.length > 0
+          ? `<figcaption>${await this.#richTextToHtml(
+              block.image.caption
+            )}</figcaption>`
+          : ""
+      }
+      </figure>`;
+    } else if (block.type === "column_list") {
+      const columns = await this.#children(block.id);
+      return `<div class="callout--columns" style="--callout-columns-count: ${
+        columns.length
+      }">${await this.#blockChildrenToHtml(block.id)}</div>`;
+    } else if (block.type === "column") {
+      return `<div>${await this.#blockChildrenToHtml(block.id)}</div>`;
     }
 
-    console.log(`Unsupported block type: ${block.type}`);
+    console.log(`Unsupported block`, block);
     return "";
   }
 

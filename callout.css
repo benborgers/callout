@@ -5,3 +5,15 @@
 .callout--indent {
   margin-left: 1rem;
 }
+
+.callout--columns {
+  display: grid;
+  grid-template-columns: repeat(var(--callout-columns-count), 1fr);
+}
+
+/* CSS Reset */
+
+img {
+  max-width: 100%;
+  max-height: 50vh;
+}
