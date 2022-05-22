@@ -1,5 +1,6 @@
 {
-  "name": "callout",
+  "name": "@benborgers/callout",
+  "version": "0.1.0",
   "scripts": {
     "dev": "esbuild test.ts --bundle --platform=node --outfile=test.out.js && node test.out.js"
   },
