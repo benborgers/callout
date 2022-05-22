@@ -59,7 +59,10 @@ export class NotionDoc {
   }
 
   async html() {
-    return html_beautify(await this.#blockToHtml(this.#_id));
+    const output = (await this.#blockToHtml(this.#_id))
+      .replace(/<\/ol><ol>/g, "")
+      .replace(/<\/ul><ul>/g, "");
+    return html_beautify(output);
   }
 
   async #blockToHtml(blockId: string): Promise<string> {
@@ -121,9 +124,27 @@ export class NotionDoc {
       }">${await this.#blockChildrenToHtml(block.id)}</div>`;
     } else if (block.type === "column") {
       return `<div>${await this.#blockChildrenToHtml(block.id)}</div>`;
+    } else if (
+      block.type === "numbered_list_item" ||
+      block.type === "bulleted_list_item"
+    ) {
+      const el = {
+        numbered_list_item: "ol",
+        bulleted_list_item: "ul",
+      }[block.type];
+
+      return `<${el}><li>${await this.#richTextToHtml(
+        block.type === "numbered_list_item"
+          ? block.numbered_list_item.rich_text
+          : block.type === "bulleted_list_item"
+          ? block.bulleted_list_item.rich_text
+          : []
+      )}</li>${
+        block.has_children ? await this.#blockChildrenToHtml(block.id) : ""
+      }</${el}>`;
     }
 
-    console.log(`Unsupported block`, block);
+    console.log("Unsupported block in Callout", block);
     return "";
   }
 
