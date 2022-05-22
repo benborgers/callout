@@ -12,7 +12,7 @@ type Block = Extract<GetBlockResponse, { type: string }>;
 type BlockParagraph = Extract<GetBlockResponse, { type: "paragraph" }>;
 type RichText = BlockParagraph["paragraph"]["rich_text"][0];
 
-export class NotionDocument {
+export class NotionDoc {
   #_id;
   #_cache: { [key: string]: Block } = {};
 

@@ -1,8 +1,11 @@
 {
   "name": "@benborgers/callout",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "main": "dist/callout.js",
   "scripts": {
-    "dev": "esbuild test.ts --bundle --platform=node --outfile=test.out.js && node test.out.js"
+    "dev": "esbuild test.ts --bundle --platform=node --outfile=test.out.js && node test.out.js",
+    "compile": "tsup callout.ts --dts",
+    "publish": "npm run compile && npm publish --access public"
   },
   "author": "Ben Borgers <benborgers@hey.com>",
   "dependencies": {
@@ -12,6 +15,7 @@
   "devDependencies": {
     "@types/js-beautify": "^1.13.3",
     "esbuild": "^0.14.39",
+    "tsup": "^5.12.8",
     "typescript": "^4.6.4"
   }
 }
