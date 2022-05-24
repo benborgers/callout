@@ -1,8 +1,11 @@
 import { Client } from "@notionhq/client";
-import type { GetBlockResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  GetBlockResponse,
+  QueryDatabaseResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 import { html_beautify } from "js-beautify";
 import { fetch } from "undici";
-import { writeFileSync, mkdirSync } from "fs";
+import { writeFileSync } from "fs";
 import { createHash } from "crypto";
 
 // It's ok to include this because it can only read content it's shared with,
@@ -14,6 +17,10 @@ const notion = new Client({ auth: NOTION_TOKEN });
 type Block = Extract<GetBlockResponse, { type: string }>;
 type BlockParagraph = Extract<GetBlockResponse, { type: "paragraph" }>;
 type RichText = BlockParagraph["paragraph"]["rich_text"][0];
+type DatabasePage = Extract<
+  QueryDatabaseResponse["results"][0],
+  { url: string }
+>;
 
 export class NotionDoc {
   #_id;
@@ -207,6 +214,55 @@ export class NotionDoc {
     }
 
     return html.join("");
+  }
+
+  async database() {
+    const response = await notion.databases.query({
+      database_id: this.#_id,
+    });
+
+    const results = response.results as DatabasePage[];
+
+    const rows = [];
+
+    for (const result of results) {
+      if (result.url) {
+        const row: { [key: string]: any } = {
+          created_at: result.created_time,
+          updated_at: result.last_edited_time,
+        };
+
+        for (const key in result.properties) {
+          const value = result.properties[key];
+
+          if (value.type === "title" || value.type === "rich_text") {
+            row[key] = await this.#richTextToHtml(
+              value.type === "title"
+                ? value.title
+                : value.type === "rich_text"
+                ? value.rich_text
+                : []
+            );
+          } else if (value.type === "files") {
+            const files = [];
+            for (const file of value.files) {
+              files.push({
+                name: file.name,
+                url:
+                  file.type === "external"
+                    ? file.external.url
+                    : await this.#persistentSrc(file.file.url),
+              });
+            }
+            row[key] = files;
+          }
+        }
+
+        rows.push(row);
+      }
+    }
+
+    return rows;
   }
 
   async #persistentSrc(url: string) {
