@@ -229,10 +229,10 @@ export default function Callout() {
       fetch(url)
         .then((res) => res.arrayBuffer())
         .then((buffer) =>
-          writeFileSync(`./dist/${filename}`, Buffer.from(buffer))
+          writeFileSync(`./public/callout/${filename}`, Buffer.from(buffer))
         );
 
-      return `/${filename}`;
+      return `/callout/${filename}`;
     }
   }
 
