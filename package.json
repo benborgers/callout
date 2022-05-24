@@ -10,7 +10,8 @@
   "author": "Ben Borgers <benborgers@hey.com>",
   "dependencies": {
     "@notionhq/client": "^1.0.4",
-    "js-beautify": "^1.14.3"
+    "js-beautify": "^1.14.3",
+    "undici": "^5.2.0"
   },
   "devDependencies": {
     "@types/js-beautify": "^1.13.3",
