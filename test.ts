@@ -1,6 +1,5 @@
-import * as fs from "node:fs";
-import Callout from "./callout";
-const { NotionDoc } = Callout();
+import * as fs from "fs";
+import { NotionDoc } from "./callout";
 
 (async () => {
   const doc = new NotionDoc("cba6cbb96ae8419fbb5446f1f912faab");
