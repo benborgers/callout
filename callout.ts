@@ -219,14 +219,12 @@ export class NotionDoc {
     const extension = urlWithoutQuery.split(".").pop();
     const filename = `${hash}.${extension}`;
 
-    mkdirSync("./dist/callout", { recursive: true });
-
-    fetch(url)
+    await fetch(url)
       .then((res) => res.arrayBuffer())
       .then((buffer) =>
-        writeFileSync(`./dist/callout/${filename}`, Buffer.from(buffer))
+        writeFileSync(`./dist/${filename}`, Buffer.from(buffer))
       );
 
-    return `/callout/${filename}`;
+    return `/${filename}`;
   }
 }
