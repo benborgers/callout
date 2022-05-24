@@ -4,3 +4,4 @@ node_modules
 *.out.js
 test.html
 dist/
+public/

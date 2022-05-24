@@ -2,7 +2,7 @@ import { Client } from "@notionhq/client";
 import type { GetBlockResponse } from "@notionhq/client/build/src/api-endpoints";
 import { html_beautify } from "js-beautify";
 import { fetch } from "undici";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 import { createHash } from "crypto";
 
 // It's ok to include this because it can only read content it's shared with,
@@ -26,7 +26,7 @@ type RichText = BlockParagraph["paragraph"]["rich_text"][0];
  */
 
 export default function Callout() {
-  class NotionDoc {
+  const NotionDoc = class NotionDoc {
     #_id;
     #_cache: { [key: string]: Block } = {};
 
@@ -226,6 +226,8 @@ export default function Callout() {
       const extension = urlWithoutQuery.split(".").pop();
       const filename = `${hash}.${extension}`;
 
+      mkdirSync("./public/callout", { recursive: true });
+
       fetch(url)
         .then((res) => res.arrayBuffer())
         .then((buffer) =>
@@ -234,7 +236,7 @@ export default function Callout() {
 
       return `/callout/${filename}`;
     }
-  }
+  };
 
   return { NotionDoc };
 }
