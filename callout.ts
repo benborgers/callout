@@ -173,10 +173,6 @@ export class NotionDoc {
 
       if (object.type === "text") {
         objectHtml = object.text.content;
-
-        if (object.text.link) {
-          objectHtml = `<a href="${object.text.link.url}">${objectHtml}</a>`;
-        }
       }
 
       if (object.annotations.bold) {
@@ -201,6 +197,10 @@ export class NotionDoc {
 
       if (object.annotations.color) {
         // TODO: colors
+      }
+
+      if (object.type === "text" && object.text.link) {
+        objectHtml = `<a href="${object.text.link.url}">${objectHtml}</a>`;
       }
 
       html.push(objectHtml);
