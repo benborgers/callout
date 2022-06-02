@@ -5,7 +5,7 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 import { html_beautify } from "js-beautify";
 import { fetch } from "undici";
-import { writeFileSync } from "fs";
+import * as fs from "fs";
 import { createHash } from "crypto";
 
 // It's ok to include this because it can only read content it's shared with,
@@ -270,6 +270,10 @@ export class NotionDoc {
       return url;
     }
 
+    if (!fs.existsSync("dist/")) {
+      fs.mkdirSync("dist/");
+    }
+
     const urlWithoutQuery = url.split("?")[0];
     const hash = createHash("sha1").update(urlWithoutQuery).digest("hex");
     const extension = urlWithoutQuery.split(".").pop();
@@ -278,7 +282,7 @@ export class NotionDoc {
     await fetch(url)
       .then((res) => res.arrayBuffer())
       .then((buffer) =>
-        writeFileSync(`./dist/${filename}`, Buffer.from(buffer))
+        fs.writeFileSync(`./dist/${filename}`, Buffer.from(buffer))
       );
 
     return `/${filename}`;
