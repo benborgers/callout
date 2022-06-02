@@ -228,6 +228,7 @@ export class NotionDoc {
     for (const result of results) {
       if (result.url) {
         const row: { [key: string]: any } = {
+          id: result.id,
           created_at: result.created_time,
           updated_at: result.last_edited_time,
         };
