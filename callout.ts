@@ -256,6 +256,8 @@ export class NotionDoc {
               });
             }
             row[key] = files;
+          } else if (value.type === "checkbox") {
+            row[key] = value.checkbox;
           }
         }
 
