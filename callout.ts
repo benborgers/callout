@@ -10,7 +10,7 @@ import { createHash } from "crypto";
 
 // It's ok to include this because it can only read content it's shared with,
 // and does not have access to user information.
-const NOTION_TOKEN = "secret_b9zKgreYmLmPusMEhPtuRjLTZRcfmNIzyPu0NmPE1rr";
+const NOTION_TOKEN = "secret_sbXZjuUly1QrTTLXegyulhWcrqOiAQYboIUXKKOG8EG";
 
 const notion = new Client({ auth: NOTION_TOKEN });
 
